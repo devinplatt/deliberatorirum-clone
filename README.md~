@@ -14,7 +14,7 @@ Instructions
 First, you'll need to clone the repo.
 
     $ git clone git@github.com:devinplatt/deliberatorium-clone.git
-    $ cd deliberatorium-clone
+    $ cd flask_heroku
 
 Second, let's download `pip`, `virtualenv`, `foreman`, and the [`heroku`
 Ruby gem](http://devcenter.heroku.com/articles/using-the-cli).

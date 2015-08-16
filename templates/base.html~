@@ -36,7 +36,6 @@
   </header>
 
   <div id="main" role="main">
-    Hello World!
     {% block main %}{% endblock %}
   </div>
 
