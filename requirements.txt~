@@ -33,4 +33,3 @@ gevent
 gunicorn
 
 gitpython
-config

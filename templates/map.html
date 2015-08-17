@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<!-- item template -->
+<!-- TODO: replace the IsIssue, IsIdea, ... elements with -->
+<!--       just one element that can handle switch-like capability -->
+<!-- TODO: replace the addIssue, addIdea, ... button div with -->
+<!--       a vuejs component (or whatever's appropriate) to make markup more clear -->
+<!-- TODO: html5 context menus when Chrome finally supports it -->
+<script type="text/x-template" id="item-template">
+  <div v-class="bold: isFolder">
+    <span v-if="isFolder" v-on ="click: toggle">[((%open ? '-' : '+'%))]</span>
+    <span v-if="isnotFolder">[_]</span>
+    <span v-if="isIssue">[I]</span>
+    <span v-if="isIdea">[i]</span>
+    <span v-if="isPro">[p]</span>
+    <span v-if="isCon">[c]</span>
+    <span v-if="isDefaultType">[d]</span>
+    ((%model.title%))
+  <span v-on="click: toggle_details">[ ((%details ? 'v' : 'e'%)) ]</span>
+  <span v-on="click: toggle_adding">[ ((%adding ? 'done adding' : 'add'%)) ]</span>
+  </div>
+  <div class="detailsbox" v-show="details"> <div v-show="view_details"> details. <br> Description: ((%model.description%)) <br> <button type="button" v-on="click: switch_to_edit">edit</button> </div> <div v-show="view_edit"> edit <input type="text" v-model="model.title"> <input type="text" v-model="model.description"> <button type="button" v-on="click: delete_item">Delete</button> <button type="button" v-on="click: switch_to_details">details</button> </div> </div>
+  <div class="addbox" v-if="isIssue" v-show="adding">add <button type="button" v-on="click: addIssue">issue</button> <button type="button" v-on="click: addIdea">idea</button></div>
+  <div class="addbox" v-if="isIdea" v-show="adding">add <button type="button" v-on="click: addIssue">issue</button> <button type="button" v-on="click: addIdea">idea</button> <button type="button" v-on="click: addPro">pro</button> <button type="button" v-on="click: addCon">con</button> </div>
+  <div class="addbox" v-if="isPro" v-show="adding">add <button type="button" v-on="click: addPro">pro</button> <button type="button" v-on="click: addCon">con</button> </div>
+  <div class="addbox" v-if="isCon" v-show="adding">add <button type="button" v-on="click: addPro">pro</button> <button type="button" v-on="click: addCon">con</button> </div>
+  <ul v-show="open" v-if="isFolder" class="ulclass">
+    <li class="item"
+      v-repeat="model: model.children"
+      v-component="item">
+    </li>
+  </ul>
+</script>
+
+<!-- save template -->
+<script type="text/x-template" id="save-template">
+  <button type="button" v-on="click: save">Save</button>
+</script>
+
+
+<form id="demo">
+
+<!-- the demo root element -->
+<ul class="ulclass">
+  <li class="item"
+    v-component="item"
+    v-with="model: treeData">
+  </li>
+</ul>
+
+<div v-component="savebutton" v-with="model: treeData"></div>
+
+<p><pre>data: ((%$data | json 2%))</pre></p>
+</form>
+
+<!-- JavaScript at the bottom to speed up page loading -->
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-2.1.3.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vue.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='demo.js') }}"></script>
+
+<script>
+load('{{ mapid }}');
+</script>
+
+{% endblock %}

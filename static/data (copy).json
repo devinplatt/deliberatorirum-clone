@@ -1,0 +1,9 @@
+{
+  "name": "My Tree",
+  "msg": "thing",
+  "children": [
+    { "name": "hello", "msg": "thing2" },
+    { "name": "wat", "msg": "thing3" }
+  ]
+}
+

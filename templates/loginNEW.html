@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Login</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="" method="post" name="login">
+      {{ form.hidden_tag() }}
+      <p>
+          Please enter your username:<br>
+          {{ form.username(size=80) }}<br>
+      </p>
+      <p>
+          Please enter your password:<br>
+          {{ form.password(size=80) }}<br>
+      </p>
+      <p><input type="submit" value="Sign In"></p>
+  </form>
+{% endblock %}

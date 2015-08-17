@@ -1,0 +1,24 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "description": "new description",
+          "title": "Pro: if bankers make so much money, why isn't everyone trying to be a banker?",
+          "type": "pro"
+        }
+      ],
+      "description": "See the article! See it!",
+      "title": "Idea: Yes it is.",
+      "type": "idea"
+    },
+    {
+      "description": "thing3",
+      "title": "Idea: No it isn't.",
+      "type": "idea"
+    }
+  ],
+  "description": "thi",
+  "title": "Issue: DEFAULT Is the Rent Hypothesis true?",
+  "type": "issue"
+}
