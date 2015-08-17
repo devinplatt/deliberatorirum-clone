@@ -23,7 +23,7 @@ def get_mapnames():
 def loadJson(filename = 'static/data.json'):
   return json.load(open(filename))
 
-@bp.route('/get_maps')
+#@bp.route('/get_maps')
 def get_maps():
   maps = get_mapnames()
   current_app.logger.info('maps: {0}'.format(maps))
