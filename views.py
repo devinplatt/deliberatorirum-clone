@@ -3,7 +3,7 @@ from flask import current_app, Blueprint
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash, json, jsonify, make_response
 import logging
-import gitutils
+import model_utils
 import os
 
 from flask.ext.login import login_required
@@ -13,19 +13,12 @@ bp = Blueprint('bp', __name__,
                static_folder='static')
 
 
-def get_mapnames():
-  map_path = './maps'
-  # return [ f for f in os.listdir(map_path) if os.path.isdir(os.path.join(map_path,f)) ]
-  # line above not good for using postgres (since relies on using filesystem)
-  # dummy line below for the time being
-  return [ 'global warming', 'health care', 'other stuff' ]
-
 def loadJson(filename = 'static/data.json'):
   return json.load(open(filename))
 
 @bp.route('/get_maps')
 def get_maps():
-  maps = get_mapnames()
+  maps = model_utils.GetMapnames()
   current_app.logger.info('maps: {0}'.format(maps))
   msg = "{\n"
   for i in range(len(maps)):
@@ -36,7 +29,7 @@ def get_maps():
   current_app.logger.info('maps return value: {0}'.format(msg))
   return msg
 
-#@bp.route('/create_map')
+@bp.route('/create_map')
 def create_map():
   mapname = request.query_string
   current_app.logger.info('Request: {0}'.format(request))
@@ -46,15 +39,15 @@ def create_map():
     mapname = 'map1'
   if session.get('logged_in'):
     # CHECK THAT THE FILE EXISTS
-    msg = gitutils.LoadOrCreate(session['username'], mapname)
+    msg = model_utils.CreateIfNotFound(session['username'], mapname)
     current_app.logger.info('Git msg: {0}'.format(msg))
   else:
     # CHECK THAT THE FILE EXISTS
-    msg = gitutils.LoadOrCreate(mapname = mapname)
+    msg = model_utils.CreateIfNotFound(mapname = mapname)
     current_app.logger.info('Git msg: {0}'.format(msg))
   return get_maps()
 
-#@bp.route('/get_tree')
+@bp.route('/get_tree')
 def get_tree():
   mapname = request.query_string
   current_app.logger.info('Request: {0}'.format(request))
@@ -65,26 +58,28 @@ def get_tree():
   filename = None
   if session.get('logged_in'):
     # CHECK THAT THE FILE EXISTS
-    msg = gitutils.LoadOrCreate(session['username'], mapname)
+    msg = model_utils.CreateIfNotFound(session['username'], mapname)
     current_app.logger.info('Git msg: {0}'.format(msg))
-    filename = gitutils.user_dir(session['username'], mapname)
+    #filename = model_utils.user_dir(session['username'], mapname)
   else:
     # CHECK THAT THE FILE EXISTS
-    msg = gitutils.LoadOrCreate(mapname = mapname)
+    msg = model_utils.CreateIfNotFound(mapname = mapname)
     current_app.logger.info('Git msg: {0}'.format(msg))
-    filename = gitutils.user_dir(mapname = mapname)
-  filename = os.path.join(filename, 'data.json')
-  tree = loadJson(filename)
+  # tree comes in as string
+  tree = model_utils.loadMap(mapname)
   current_app.logger.info('tree: {0}'.format(tree))
   current_app.logger.info('tree type: {0}'.format(type(tree)))
+  # convert tree to python object
+  tree = json.loads(tree)
   tree["mapname"] = mapname
   msg = json.dumps(tree)
   current_app.logger.info('get_tree msg: {0}'.format(msg))
+  # return tree as string again
   return jsonify(tree)
 
 # TODO: make this only allowable for logged in users
 # See: http://stackoverflow.com/questions/11839855/flask-not-getting-any-data-from-jquery-request-data
-#@bp.route('/set_tree', methods=['POST'])
+@bp.route('/set_tree', methods=['POST'])
 @login_required
 def set_tree():
   current_app.logger.info('Request: {0}'.format(request))
@@ -106,13 +101,7 @@ def set_tree():
   current_app.logger.info('Response: {0}'.format(response))
   # SHOULD VERIFY THE DATA SENT TO US RIGHT HERE!!!!!!! 
   # CHECK GIT STATUS AS DOING THIS
-  #temp_dir = './tempMaps'
-  #fullpath = os.path.join(temp_dir, mapname)
-  fullpath = gitutils.user_dir(session['username'], mapname)
-  filepath = os.path.join(fullpath, 'data.json')
-  with open(filepath, 'w') as f:
-    f.write(json_text)
-  gitutils.push_change(fullpath, 'pushing user changes')
+  model_utils.SaveMap(mapname, json_text)
   return response
 
 @bp.route('/')
@@ -125,7 +114,7 @@ def nav():
 
 @bp.route('/map/<mapid>')
 def mappage(mapid):
-  if mapid in get_mapnames():
+  if mapid in model_utils.GetMapnames():
     return render_template('map.html', mapid=mapid)
   else:
     return 'Map {0} not found'.format(mapid)

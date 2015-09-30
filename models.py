@@ -1,11 +1,33 @@
 from database import db
 
+class Argmap(db.Model):
+  __tablename__ = 'argmap'
+
+  title = db.Column(db.String(120),primary_key=True)
+  data = db.Column(db.Text(), index=True, unique=False)
+
+  def GetMapname(self):
+    try:
+      return unicode(self.title)  # python 2
+    except NameError:
+      return str(self.title)  # python 3
+
+  def GetData(self):
+    try:
+      return unicode(self.data)  # python 2
+    except NameError:
+      return str(self.data)  # python 3
+
+  def SetData(self, data):
+    self.data = data
+    db.session.commit()
+
+  def __repr__(self):
+    return '<Title %r>' % (self.title)  
+
 class User(db.Model):
   __tablename__ = 'user'  # necessary?
 
-  #id = db.Column(db.Integer, primary_key=True)
-  #nickname = db.Column(db.String(64), index=True, unique=True)
-  #email = db.Column(db.String(120), index=True, unique=True)
   username = db.Column(db.String(120),primary_key=True)
   password = db.Column(db.String(120), index=True, unique=False)
 
@@ -29,9 +51,3 @@ class User(db.Model):
 
   def get_id(self):
     return self.get_username()
-
-#  def get_id(self):
-#    try:
-#      return unicode(self.id)  # python 2
-#    except NameError:
-#      return str(self.id)  # python 3

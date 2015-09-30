@@ -8,7 +8,6 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash, json, jsonify, make_response
 from contextlib import closing
 import logging
-import gitutils
 import os
 from flask.ext.bcrypt import Bcrypt
 
