@@ -80,9 +80,7 @@ def get_tree():
 # TODO: make this only allowable for logged in users
 # See: http://stackoverflow.com/questions/11839855/flask-not-getting-any-data-from-jquery-request-data
 @bp.route('/set_tree', methods=['POST'])
-# disabling login requirement until I make it possible to set up
-# accounts
-#@login_required
+@login_required
 def set_tree():
   current_app.logger.info('Request: {0}'.format(request))
   data = (request.form).to_dict()

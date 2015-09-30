@@ -21,9 +21,9 @@ else:
 
 # Leave out of production. Just for testing on Heroku before I can
 # set up making accounts.
-from models import User
-with app.app_context():
-  user = User(username='admin',
-              password=bcrypt.generate_password_hash('password'))
-  db.session.add(user)
-  db.session.commit()
+#from models import User
+#with app.app_context():
+#  user = User(username='admin',
+#              password=bcrypt.generate_password_hash('password'))
+#  db.session.add(user)
+#  db.session.commit()

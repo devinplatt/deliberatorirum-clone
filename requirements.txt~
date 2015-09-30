@@ -32,3 +32,4 @@ mock
 gevent
 gunicorn
 
+gitpython
