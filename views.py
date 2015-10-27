@@ -5,6 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 import logging
 import model_utils
 import os
+import urllib
 
 from flask.ext.login import login_required
 
@@ -18,7 +19,13 @@ def loadJson(filename = 'static/data.json'):
 
 @bp.route('/get_maps')
 def get_maps():
-  maps = model_utils.GetMapnames()
+  maps = []
+  try:
+    maps = model_utils.GetMapnames()
+    current_app.logger.info('maps (should not be []: {0}'.format(maps))
+  except:
+    maps = []
+    current_app.logger.warning('GetMapnames() call failed!')
   current_app.logger.info('maps: {0}'.format(maps))
   msg = "{\n"
   for i in range(len(maps)):
@@ -32,6 +39,7 @@ def get_maps():
 @bp.route('/create_map')
 def create_map():
   mapname = request.query_string
+  mapname = urllib.unquote(mapname)
   current_app.logger.info('Request: {0}'.format(request))
   current_app.logger.info('Query String: {0}'.format(mapname))
   # SANITIZE INPUT! (NO ".." ETC.)
@@ -40,16 +48,17 @@ def create_map():
   if session.get('logged_in'):
     # CHECK THAT THE FILE EXISTS
     msg = model_utils.CreateIfNotFound(session['username'], mapname)
-    current_app.logger.info('Git msg: {0}'.format(msg))
+    current_app.logger.info('Model msg: {0}'.format(msg))
   else:
     # CHECK THAT THE FILE EXISTS
     msg = model_utils.CreateIfNotFound(mapname = mapname)
-    current_app.logger.info('Git msg: {0}'.format(msg))
+    current_app.logger.info('Model msg: {0}'.format(msg))
   return get_maps()
 
 @bp.route('/get_tree')
 def get_tree():
   mapname = request.query_string
+  mapname = urllib.unquote(mapname)
   current_app.logger.info('Request: {0}'.format(request))
   current_app.logger.info('Query String: {0}'.format(mapname))
   # SANITIZE INPUT! (NO ".." ETC.)

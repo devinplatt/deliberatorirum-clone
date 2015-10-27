@@ -4,7 +4,7 @@ from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
 from database import db
-from app import app # to register app with database
+from app import app, bcrypt # to register app with database
 import os.path
 # See: http://stackoverflow.com/questions/19437883/when-scattering-flask-models-runtimeerror-application-not-registered-on-db-w
 with app.app_context():
