@@ -19,8 +19,8 @@ else:
                       SQLALCHEMY_MIGRATE_REPO,
                       api.version(SQLALCHEMY_MIGRATE_REPO))
 
-# Leave out of production. Just for testing on Heroku before I can
-# set up making accounts.
+# TODO: Leave out of production. Just for testing on Heroku before
+# I can set up making accounts.
 from models import User
 with app.app_context():
   user = User(username='admin',

@@ -14,16 +14,9 @@ from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager, login_user, logout_user, login_required
 from forms import LoginForm
 
-def create_app(config_filename = 'cf'):
-    app = Flask(__name__)
-    app.config.from_object(__name__)
-    app.config.from_pyfile('config.py', silent=False)
-    db.init_app(app)
-    app.register_blueprint(bp)
+from app_base import app
 
-    return app
-
-app = create_app()
+app.register_blueprint(bp)
 bcrypt = Bcrypt(app)
 
 def connect_db():

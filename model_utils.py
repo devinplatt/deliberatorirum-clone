@@ -29,7 +29,7 @@ def SaveMap(mapname, json_text):
 def GetMapnames():
   mapnames = []
   try:
-    [x.GetMapname() for x in Argmap.query.all()]
+    mapnames = [x.GetMapname() for x in Argmap.query.all()]
   except:
     raise
   return mapnames
