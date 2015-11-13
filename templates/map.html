@@ -18,11 +18,11 @@
     <span v-if="isCon"><img src="{{ url_for('static', filename = 'img/issue.gif') }}" width="20" height="20"></span>
     <span v-if="isDefaultType">[d]</span>
     ((%model.title%))
-  <span v-on="click: toggle_details">[ ((%details ? 'v' : 'e'%)) ]</span>
+  <span v-on="click: toggle_details">[ ((%details ? 'view' : 'edit'%)) ]</span>
   <span v-on="click: toggle_adding">[ ((%adding ? 'done adding' : 'add'%)) ]</span>
   </div>
 
-  <div class="detailsbox" v-show="details"> <div v-show="view_details"> details. <br> Description: ((%model.description%)) <br> <button type="button" v-on="click: switch_to_edit">edit</button> </div> <div v-show="view_edit"> edit <input type="text" v-model="model.title"> 
+  <div class="detailsbox" v-show="details"> <div v-show="view_details"> <b>Details</b> <br> <br> Description: ((%model.description%)) <br> <button type="button" v-on="click: switch_to_edit">edit</button> </div> <div v-show="view_edit"> <b>Edit</b> <br> <br> <input type="text" v-model="model.title"> 
 <textarea rows="4" cols="30" v-model="model.description"> </textarea>
 <button type="button" v-on="click: delete_item">Delete</button> <button type="button" v-on="click: switch_to_details">details</button> </div> </div>
   <div class="addbox" v-if="isIssue" v-show="adding">add <button type="button" v-on="click: addIssue">issue</button> <button type="button" v-on="click: addIdea">idea</button></div>

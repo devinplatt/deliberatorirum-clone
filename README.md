@@ -7,8 +7,10 @@ What is this?
 
 A prototype "clone" of the MIT Deliberatorium.
 
-Currently updating to be compatible with PaaS products (ie. Heroku) which only allow for dynamic storage in databases rather than filesystems.
+Demo
+-------------
 
+http://delib.herokuapp.com/
 
 Instructions
 ------------
