@@ -31,4 +31,11 @@ h2              { font-size: 1.2em; }
     margin: 0; 
                }
 
+.postbox       {
+    width: 320px;
+    padding: 5px;
+    border: 0px;
+    margin: 0; 
+               }
+
 .ulclass       { list-style-type: none; }

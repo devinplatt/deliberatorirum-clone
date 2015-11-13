@@ -311,3 +311,9 @@ function load(mapid) {
     success: boot_demo
   });
 }
+
+jQuery(document).ready(function(){
+    jQuery('#hideshow').on('click', function(event) {
+      jQuery('#jsondata').toggle('display');     
+  });
+});
