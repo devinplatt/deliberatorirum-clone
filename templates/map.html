@@ -12,10 +12,10 @@
   <div class="postbox" v-class="bold: isFolder">
     <span v-if="isFolder" v-on ="click: toggle">[((%open ? '-' : '+'%))]</span>
     <span v-if="isnotFolder">[_]</span>
-    <span v-if="isIssue">[I]</span>
-    <span v-if="isIdea">[i]</span>
-    <span v-if="isPro">[p]</span>
-    <span v-if="isCon">[c]</span>
+    <span v-if="isIssue"><img src="{{ url_for('static', filename = 'img/issue.gif') }}" width="16" height="16"></span>
+    <span v-if="isIdea"><img src="{{ url_for('static', filename = 'img/idea.gif') }}" width="20" height="20"></span>
+    <span v-if="isPro"><img src="{{ url_for('static', filename = 'img/pro.gif') }}" width="20" height="20"></span>
+    <span v-if="isCon"><img src="{{ url_for('static', filename = 'img/issue.gif') }}" width="20" height="20"></span>
     <span v-if="isDefaultType">[d]</span>
     ((%model.title%))
   <span v-on="click: toggle_details">[ ((%details ? 'v' : 'e'%)) ]</span>
