@@ -5,21 +5,36 @@
         <script type="text/javascript" src="{{ url_for('static', filename='jsondiffpatch/jsondiffpatch-formatters.min.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='jsondiffpatch/html.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ url_for('static', filename='jsondiffpatch/annotated.css') }}" type="text/css" />
+
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-2.1.3.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vue.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='diff.js') }}"></script>
     </head>
     <body>
         <div id="visual"></div>
         <hr/>
         <div id="annotated"></div>
         <script>
-            var left = { a: 3, b: 4 };
-            var right = { a: 5, c: 9 };
-            var delta = jsondiffpatch.diff(left, right);
+            loadLeftRevisionJson('{{ mapid }}', '{{ revid1 }}');
+            loadRightRevisionJson('{{ mapid }}', '{{ revid2 }}');
+            //var left = { a: 3, b: 4 };
+            //var right = { a: 5, c: 9 };
+            //var delta1 = jsondiffpatch.diff(left, right);
+            //var delta = jsondiffpatch.diff(left, right);
+            //((%$data_l%))
+            //var delta = jsondiffpatch.diff(data_l, data_r);
+            //console.log(left_data())
+            //console.log('delta')
+            //console.log(delta)
+            //console.log('end delta')
 
             // beautiful html diff
-            document.getElementById('visual').innerHTML = jsondiffpatch.formatters.html.format(delta, left);
+            //document.getElementById('visual').innerHTML = jsondiffpatch.formatters.html.format(delta, left);
+            //document.getElementById('visual').innerHTML = jsondiffpatch.formatters.html.format(delta1, left);
 
             // self-explained json
-            document.getElementById('annotated').innerHTML = jsondiffpatch.formatters.annotated.format(delta, left);
+            //document.getElementById('annotated').innerHTML = jsondiffpatch.formatters.annotated.format(delta, left);
+            //document.getElementById('annotated').innerHTML = jsondiffpatch.formatters.annotated.format(delta, data_l );
         </script>
     </body>
 </html>

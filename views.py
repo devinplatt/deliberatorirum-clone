@@ -58,6 +58,7 @@ def create_map():
 @bp.route('/get_tree')
 def get_tree():
   mapname = request.query_string
+  # user = request.args.get('user')
   mapname = urllib.unquote(mapname)
   current_app.logger.info('Request: {0}'.format(request))
   current_app.logger.info('Query String: {0}'.format(mapname))
@@ -130,6 +131,91 @@ def mappage(mapid):
   else:
     return 'Map {0} not found'.format(mapid)
 
-@bp.route('/diff')
-def diff():
-  return render_template('diff.html')
+@bp.route('/map/<mapid>/revision/<revid>')
+def mappage_rev(mapid, revid):
+  if mapid in model_utils.GetMapnames():
+    return render_template('revision.html',
+                           mapid=mapid, revid=revid)
+  else:
+    return 'Map {0} not found'.format(mapid)
+
+@bp.route('/map/<mapid>/revisions')
+def revisions(mapid):
+  if mapid in model_utils.GetMapnames():
+    return render_template('revisions.html', mapid=mapid)
+  else:
+    return 'Map {0} not found'.format(mapid)
+
+@bp.route('/get_revisions')
+def get_revisions():
+
+  revisions = []
+  try:
+    mapname = request.query_string
+    #mapname = request.args.get('mapname')
+    mapname = urllib.unquote(mapname)
+    #revision_id = request.args.get('revid')
+    current_app.logger.info('Request: {0}'.format(request))
+    current_app.logger.info('Query String: {0}'.format(mapname))
+    #current_app.logger.info('Query String[revid]: {0}'.format(revision_id))
+    revision_ids, parent_ids = model_utils.GetRevisions(mapname)
+    current_app.logger.info('revisions (should not be []): {0}'.format(revision_ids))
+    revisions = revision_ids
+  except:
+    revisions = []
+    current_app.logger.warning('GetRevisions() call failed!')
+  current_app.logger.info('revisions: {0}'.format(revisions))
+  
+  # SANITIZE INPUT! (NO ".." ETC.)
+
+  msg = "{\n"
+  for i in range(len(revisions)):
+    msg += "\"r" + str(i) + "\": \"" + revisions[i] + "\","
+  msg = msg[:-1]
+  msg += "\n}"
+
+  current_app.logger.info('msg: {0}'.format(msg))
+  current_app.logger.info('revisions return value: {0}'.format(msg))
+  return msg
+
+@bp.route('/get_tree_revision')
+def get_tree_revision():
+  # mapname = request.query_string
+  qs = request.query_string
+  current_app.logger.info('qs: {0}'.format(qs))
+  #mapname = request.args.get('mapname')
+  split = qs.split('&')
+  mapname = split[0].split('=')[1]
+  current_app.logger.info('mapname: {0}'.format(mapname))
+  mapname = urllib.unquote(mapname)  # unquote_plus() instead?
+  revision_id = split[1].split('=')[1]
+  #revision_id = request.form.get('revid')
+
+  current_app.logger.info('Request: {0}'.format(request))
+  current_app.logger.info('Query String[mapid]: {}'.format(mapname))
+  current_app.logger.info('Query String[revid]: {}'.format(revision_id))
+
+  # SANITIZE INPUT! (NO ".." ETC.)
+  # SHOULD CHECK THAT THE MAP EXISTS
+
+  # tree comes in as string
+  tree = model_utils.loadMap(mapname, revision_id)
+  current_app.logger.info('tree: {0}'.format(tree))
+  current_app.logger.info('tree type: {0}'.format(type(tree)))
+  # convert tree to python object
+  tree = json.loads(tree)
+  tree["mapname"] = mapname
+  msg = json.dumps(tree)
+  current_app.logger.info('get_tree msg: {0}'.format(msg))
+  # return tree as string again
+  return jsonify(tree)
+
+
+#@bp.route('/diff')
+#def diff():
+#  return render_template('diff.html')
+
+@bp.route('/map/<mapid>/diff/<revid1>/<revid2>')
+def diff(mapid, revid1, revid2):
+  return render_template('diff.html',
+                         mapid=mapid, revid1=revid1, revid2=revid2)

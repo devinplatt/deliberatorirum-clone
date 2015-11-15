@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form id="revisions_loader">
+<ul id="revisions" size="3" v-model="selected">
+  <li v-repeat="revisions"><a href="/map/{{ mapid }}/revision/((%$value%))">((%$value%))</a></li>
+</ul>
+</form>
+
+To compare two revisions goto /map/[mapname]/diff/revision[revision1]/[revision2]
+<br>
+eg. /map/Immigration reform/diff/1/2
+
+<!-- JavaScript at the bottom to speed up page loading -->
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-2.1.3.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vue.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='demo.js') }}"></script>
+
+<script>
+loadRevisions('{{ mapid }}');
+</script>
+
+{% endblock %}

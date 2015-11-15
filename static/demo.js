@@ -312,6 +312,50 @@ function load(mapid) {
   });
 }
 
+function loadRevision(mapid, revid) {
+  console.log('loading map');
+  console.log(mapid);
+  console.log(revid);
+  $.ajax({
+    url: "/get_tree_revision",
+    data: {'mapid': mapid, 'revid': revid},
+    success: boot_demo
+  });
+}
+
+// used in revisions.html (should I start using a different .js
+// file at this point?)
+var revisions_loader = null;
+var revisions_loader_data = null;
+// Callback function
+function show_revisions_loader(json_string, textStatus, jqXHR) {
+  console.log('In show_revisions_loader callback function!');
+  //console.log(json_string);
+  revisions_loader_data = json_string;
+  revisions_loader = new Vue({
+    el: '#revisions_loader',
+    data: {
+      description: 'this',
+      val: 3,
+      revisions: revisions_loader_data,
+      selected: "none",
+      new_mapname: "none"
+    }
+  });
+};
+
+// Get the list of revisions
+function loadRevisions(mapid) {
+  console.log('loading revisions');
+  console.log(mapid);
+  $.ajax({
+    dataType: "json",
+    url: "/get_revisions",
+    data: mapid,
+    success: show_revisions_loader
+  });
+}
+
 jQuery(document).ready(function(){
     jQuery('#hideshow').on('click', function(event) {
       jQuery('#jsondata').toggle('display');     
